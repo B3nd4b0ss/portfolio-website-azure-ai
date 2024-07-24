@@ -1,9 +1,7 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 
 export default function Home() {
-
   const [menuOpen, setMenuOpen] = useState(false);
   const [messageInput, setMessageInput] = useState('');
 
@@ -11,30 +9,40 @@ export default function Home() {
     {
       role: 'assistant',
       content: 'How can I help you learn more about Ben Grob and his resume?'
-  }
-  ])
+    }
+  ]);
 
-  const submitForm = async (e: { preventDefault: () => void; }) => {
+  const submitForm = async (e) => {
     e.preventDefault();
-    let newMessages = [...messages, {role: 'user', content:messageInput}]
-    setMessages(newMessages)
+    let newMessages = [...messages, { role: 'user', content: messageInput }];
+    setMessages(newMessages);
     setMessageInput('');
-    const apiMessage = await fetch(
-      '/api',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type':'application/json'
-        },
-        body: JSON.stringify({messages: newMessages})
-      }
-    ).then(res => res.json());
-    setMessages([...newMessages, {role: 'system', content: apiMessage.message }]);
-  }
+
+    try {
+        const response = await fetch('/api', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ messages: newMessages })
+        });
+        const apiMessage = await response.json();
+
+        if (!response.ok) {
+            throw new Error(apiMessage.details || 'Unknown error occurred');
+        }
+
+        setMessages([...newMessages, { role: 'assistant', content: apiMessage.message }]);
+    } catch (error) {
+        console.error('Error fetching from API:', error);
+        setMessages([...newMessages, { role: 'system', content: 'There was an error processing your request. Please try again later.' }]);
+    }
+};
+
 
   const toggleMobileMenu = () => {
     setMenuOpen(!menuOpen);
-  }
+  };
   return ( 
     <>
     <header id="header">
