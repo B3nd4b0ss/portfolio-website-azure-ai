@@ -113,10 +113,10 @@ export default function Home() {
               <a href="mailto:ben.grob@grobis.ch" className="button white"> Contact Me </a>
             </div>
             <div className="social-links">
-              <a href="#">
+              <a href="https://github.com/B3nd4b0ss" target="_blank">
                 <img src="imgs/github.png" alt="GitHub" width="48" />
               </a>
-              <a href="#">
+              <a href="https://www.linkedin.com/in/ben-grob-b6b686300/" target="_blank">
                 <img
                   src="imgs/iconmonstr-linkedin-3.svg"
                   alt="LinkedIn"
